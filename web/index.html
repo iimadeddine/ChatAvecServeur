@@ -1,0 +1,38 @@
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <script src="jquery-3.2.1.min.js" type="text/javascript"></script>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <div style="float: left">
+            <textarea id="message" name="message" rows="20" cols="50" readonly="">
+            </textarea> <br/>
+            <input id="inputText" type="text" name="inputText" value="" />
+            <input id ="send" type="button" value="Envoyer" onclick="sendMessage();" />
+        </div>
+        <div>
+            <textarea id="nbrClient" name="nbrClient" rows="20" cols="50" readonly="">
+            </textarea> 
+        </div>
+        <script>
+            var ws = new WebSocket("ws://localhost:8080/ProjectChat/serverChat");
+            ws.onmessage = function (evt)
+            {
+                var jsonData = JSON.parse(evt.data);
+                if (jsonData != null) {
+                    $("#message").append(jsonData.message + "\n");
+                    $("#nbrClient").append(jsonData.user + "\n");
+                }
+            };
+
+            function sendMessage() {
+                ws.send($("#inputText").val());
+                $("#inputText").val("");
+            }
+            
+            
+        </script>
+    </body>
+</html>
